@@ -1,89 +1,80 @@
 import { request } from "http";
 import Controller from "../interfaces/controller.interface";
 import { Request, Response, NextFunction, Router } from "express";
+import { checkPostCount } from "../middlewares/checkPostCount.middleware";
+import DataService from "../modules/services/data.service"
 
-let testArray = [4,5,6,3,5,3,7,5,13,5,6,4,3,6,3,6];
 
 class PostController implements Controller {
     public path = '/api/post';
     public router = Router();
+    private dataService = new DataService;
 
     constructor() {
         this.initializeRoutes();
     }
 
     private initializeRoutes() {
-        this.router.get(`${this.path}/latest`, this.getAll);
-        this.router.post(`${this.path}/:id`, this.addData);
+        /* Dodawanie */
+        this.router.post(`${this.path}`, this.addData);
 
-        this.router.get(`${this.path}/:id`, this.getOnePost);
-        this.router.post(`${this.path}`, this.addNewPost);
-        this.router.delete(`${this.path}/:id`, this.deleteOnePost);
-        this.router.post(`${this.path}s/:num`, this.getNumPosts);
-        this.router.get(`${this.path}s`, this.getAllPosts);
-        this.router.delete(`${this.path}s`, this.deleteAllPosts);
+        /* Pobieranie */
+        this.router.get(`${this.path}s`, this.getPosts);
+        this.router.get(`${this.path}/:id`, this.getElementById);
+        this.router.post(`${this.path}s/:limit`, checkPostCount, this.getSeveralPosts);
+
+        /* Usuwanie */
+        this.router.delete(`${this.path}/:id`, this.removePost);
+        this.router.delete(`${this.path}s`, this.removePosts);
     }
 
-    private getAll = async (request: Request, response: Response, next: NextFunction ) => {
-        response.status(200).json(testArray);
-    };
-
-    private addData = async (request: Request, response: Response, next: NextFunction) => {
-        const { elem } = request.body;
-
-        testArray.push(elem);
-
-        response.status(200).json(testArray);
-    };
 
     /* Post methods */
-    private getOnePost = async (requsest: Request, response: Response) => {
-        const { id } = requsest.params;
+    private addData = async (request: Request, response: Response, next: NextFunction) => {
+        const { title, text, image } = request.body;
 
-        if (! Number.isInteger(Number(id)) || Number(id) >= testArray.length || Number(id) < 0) {
-            return response.status(404).json({ error: "Post not found." });
+        const readingData = {
+            title,
+            text,
+            image
+        };
+
+        try {
+            await this.dataService.createPost(readingData);
+            response.status(200).json(readingData);
+        } catch (error) {
+            console.log('Wystąpił błąd poczas tworzenia postu: ', error);
+            response.status(400).json({error: 'Invalid input data.'});
         }
-        
-        response.status(200).json(testArray[Number(id)]);
     }
 
-    private addNewPost = async (request: Request, response: Response) => {
-        const { elem } = request.body;
-
-        testArray.push(elem);
-
-        response.status(201).json(testArray);
-    };
-
-    private deleteOnePost = (request: Request, response: Response) => {
+    private getElementById = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
+        const allData = await this.dataService.getPost({ _id: id });
+        response.status(200).json(allData);
+    }
 
-        if (! Number.isInteger(Number(id)) || Number(id) >= testArray.length || Number(id) < 0) {
-            return response.status(404).json({ error: "Post not found." });
-        }
-
-        testArray.splice(Number(id), 1);
-
-        response.status(200).json(testArray);
-    };
-
-    private getNumPosts (request: Request, response: Response) {
-        const { num } = request.params;
-
-        let posts = [...testArray].splice(0, Number(num));
-
+    private getPosts = async (request: Request, response: Response, next: NextFunction) => {
+        const posts = await this.dataService.getPosts();
         response.status(200).json(posts);
     }
 
-    private getAllPosts = async (request: Request, response: Response ) => {
-        response.status(200).json(testArray);
-    };
+    private getSeveralPosts = async (request: Request, response: Response, next: NextFunction) => {
+        const { limit } = request.params;
+        const posts = await this.dataService.getSeveralPosts(limit);
+        response.status(200).json(posts);
+    }
 
-    private deleteAllPosts = async (request: Request, response: Response) => {
-        testArray.length = 0;
+    private removePost = async (request: Request, response: Response, next: NextFunction) => {
+        const { id } = request.params;
+        await this.dataService.deletePost({ _id: id });
+        response.status(200).json({message: "Post removed."});
+    }
 
-        response.status(200).json(testArray);
-    };
+    private removePosts = async (request: Request, response: Response, next: NextFunction) => {
+        await this.dataService.deletePosts();
+        response.status(200).json({message: "Posts removed."});
+    }
 }
 
 export default PostController;
