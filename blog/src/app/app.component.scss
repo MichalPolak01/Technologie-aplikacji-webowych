@@ -1,0 +1,27 @@
+
+* {
+    margin: 5svh;
+    display: grid;
+    gap: 2svh;
+    grid-template-columns: auto auto auto auto;
+    justify-content: center;
+    align-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    flex-basis: 25%;
+}
+
+
+@media (max-width: 1910px) {
+    * { grid-template-columns: auto auto auto; }
+}
+
+@media (max-width: 1310px) {
+    * { grid-template-columns: auto auto; }
+}
+
+@media (max-width: 880px) {
+    * { grid-template-columns: auto; }
+}
