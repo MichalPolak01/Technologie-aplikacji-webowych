@@ -4,8 +4,8 @@ import { config } from '../config';
 import { IUser } from "../modules/models/user.model";
 
 export const auth = (request: Request, response: Response, next: NextFunction) => {
-    let token = request.headers['x-access-token'] || request.headers['authorization'];
-    console.log(token);
+    let token = request.headers['x-auth-token'] || request.headers['authorization'];
+    // console.log(token);
     if (token && typeof token === 'string') {
         if (token.startsWith('Barrer ')) {
             token = token.slice(7, token.length);

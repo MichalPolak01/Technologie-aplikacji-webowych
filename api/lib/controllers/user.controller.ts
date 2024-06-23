@@ -41,9 +41,14 @@ class UserController implements Controller {
                 response.status(401).json( {error: 'Unauthorized'} );
                 return;
             }
-            await this.passwordService.authorize(user.id, await this.passwordService.hashPassword(password) );
-            const token = await this.tokenService.create(user);
 
+            const isPasswordValid = await this.passwordService.authorize(user.id, password);
+            if (!isPasswordValid) {
+                response.status(401).json({ error: 'Unauthorized' });
+                return;
+            }
+
+            const token = await this.tokenService.create(user);
             response.status(200).json(this.tokenService.getToken(token));
         } catch (error) {
             console.error(`Validation Error: ${(error as Error).message}`);
@@ -84,7 +89,7 @@ class UserController implements Controller {
         try {
             const user = await this.userService.getByEmailOrName(name);
             if (!user) {
-                response.status(401).json( {error: 'Unauthorized 1'} );
+                response.status(401).json( {error: 'Unauthorized'} );
                 return;
             }
             const generatedPassword = await this.passwordService.generateRandomPassword(8);

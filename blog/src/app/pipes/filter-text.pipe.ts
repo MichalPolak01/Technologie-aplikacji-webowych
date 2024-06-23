@@ -21,7 +21,7 @@ export class FilterTextPipe implements PipeTransform {
         return false;
       }
 
-      return val.text.toLowerCase().includes(filterText);
+      return val.text.toLowerCase().includes(filterText) || val.title.toLowerCase().includes(filterText);
     });
   }
 

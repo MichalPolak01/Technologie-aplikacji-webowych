@@ -1,0 +1,23 @@
+<section class="container card p-5 mt-5">
+  <h1 class="text-center text-primary mb-5">SignUp</h1>
+    <form class="form-horizontal" method="POST" name="signup" id="signup">      
+      <div class="form-group">
+        <label class="control-label col-sm-3">Login <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" name="mem_name" id="mem_name" placeholder="Type login" value="" [(ngModel)]="credentials.name">
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label">Email<span class="text-danger">*</span></label>
+        <input type="email" class="form-control" name="emailid" id="emailid" placeholder="Type email ..." value="" [(ngModel)]="credentials.email">
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label col-sm-3">Password<span class="text-danger">*</span></label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Type password" value="" [(ngModel)]="credentials.password">
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label col-sm-3">Re-password <span class="text-danger">*</span></label>
+        <input type="password" class="form-control" name="cpassword" id="cpassword" placeholder="Re-password" value="">
+      </div>
+
+      <button (click)="create()" name="Submit" type="submit" class="btn btn-primary mt-3">Sing Up</button>
+    </form>
+</section>

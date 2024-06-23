@@ -1,0 +1,12 @@
+<section *ngIf="comments.length" class="container card mt-2 px-5 py-4 mb-5">
+  <h2 class="text-center text-primary mb-4">Comments</h2>
+    <div *ngFor="let comment of comments" class="comment">
+      <p class="fst-italic px-3">{{ comment.text }}</p>
+      <!-- <p class="fst-italic px-3">{{ comment.createdAt }}</p> -->
+      <p class="fst-italic px-3">{{ comment.createdAt | date: 'dd.MM.yyyy, HH:mm' }}</p>
+      <hr>
+    </div>
+</section>
+<section *ngIf="!comments.length" class="container card mt-2 px-5 py-4 mb-5">
+  <p class="fst-italic">No comments yet.</p>
+</section>

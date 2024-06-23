@@ -13,13 +13,9 @@ import { BlogComponent } from '../blog/blog.component';
 export class BlogHomeComponent implements OnInit {
   public filterText: string = '';
 
-  constructor() {
+  constructor() { }
 
-  }
-
-  ngOnInit(): void {
-  
-  }
+  ngOnInit(): void { }
 
   getName($event: string): void {
     this.filterText = $event;

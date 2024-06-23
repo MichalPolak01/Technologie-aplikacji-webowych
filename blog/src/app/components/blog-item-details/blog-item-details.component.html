@@ -1,4 +1,15 @@
-<img [src]="image">
-<p>
-    {{ text }}
-</p>
+<section class="container card mt-5">
+    <img [src]="image" class="img">
+    <div class="card-body">
+        <h1>{{ title }}</h1>
+        <p>
+            {{ text }}
+        </p>
+    </div>
+</section>
+
+<app-blog-add-comment [postId]="postId" (commentAdded)="refreshComments()"></app-blog-add-comment>
+<app-blog-comment-list [postId]="postId"></app-blog-comment-list>
+
+
+

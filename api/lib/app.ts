@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import { logger } from "./middlewares/logger.middleware"
+import cors from 'cors';
 
 class App {
     public app: express.Application;
@@ -46,10 +47,17 @@ class App {
         });
     }
 
+    corsOptions = {
+        origin: 'http://localhost:4200',
+        optionsSuccessStatus: 200,
+        credentials: true
+    };
+
     private initializeMiddlewares(): void {
         this.app.use(bodyParser.json());
         // this.app.use(morgan('dev'));
         this.app.use(logger);
+        this.app.use(cors(this.corsOptions));
     }
 
     private initializeControllers(controllers: Controller[]): void {

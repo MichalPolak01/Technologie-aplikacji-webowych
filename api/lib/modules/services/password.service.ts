@@ -11,22 +11,24 @@ class PasswordService {
         return result;
     }
 
-    public async authorize(userId: string, password: string) {
+    public async authorize(userId: string, password: string): Promise<boolean> {
         try {
-            const result = await PasswordModel.findOne( { userId: userId, password: password } );
-            if (result) {
-                return true;
+            const passwordData = await PasswordModel.findOne({ userId: userId });
+            if (!passwordData) {
+                return false;
             }
+
+            const isPasswordCorrect = await bcrypt.compare(password, passwordData.password);
+            return isPasswordCorrect;
         } catch (error) {
-            console.error('Wystąpił błąd podczas autoryzacji: ', error);
-            throw new Error('Wystąpił błąd podczas autoryzacji!');
+            console.log('Authorization error! Wrong password!');
+            throw new Error('Authorization error! Wrong password!');
         }
     }
 
     async hashPassword(password: string): Promise<string> {
         const salrRounds = 10;
         const hashPassword = await bcrypt.hash(password, salrRounds);
-        // console.log('hash', hashPassword);
         return hashPassword;
     }
 

@@ -28,8 +28,8 @@ class TokenService {
                 return result;
             }
         } catch (error) {
-            console.error('Występił błąd podczas tworzenia tokena: ', error);
-            throw new Error('Występił błąd podczas tworzenia tokena!');
+            console.error('Error while creating token: ', error);
+            throw new Error('Error while creating token!');
         }
     }
 
@@ -42,7 +42,7 @@ class TokenService {
             const result = await TokenModel.deleteOne( {userId: userId} );
             console.log(result);
             if (result.deletedCount === 0) {
-                throw new Error('Występił błąd podczas usuwania tokena!');
+                throw new Error('Error while removeing token!');
             }
             return result;
         } catch (error) {

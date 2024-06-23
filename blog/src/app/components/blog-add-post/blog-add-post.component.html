@@ -1,0 +1,33 @@
+<div class="container card p-5 mt-5">
+    <h1 class="text-center text-primary">Add new post</h1>
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+        <div class="form-group mt-5">
+            <label for="title">Title</label>
+            <input id="title" class="form-control" formControlName="title">
+            <div class="alert alert-danger" *ngIf="postForm.get('title')?.invalid && postForm.get('title')?.touched">
+                Title is required.
+            </div>
+        </div>
+        <div class="form-group mt-3">
+            <label for="text">Text</label>
+            <textarea id="text" class="form-control" formControlName="text"></textarea>
+            <div class="alert alert-danger" *ngIf="postForm.get('text')?.invalid && postForm.get('text')?.touched">
+                Text is required.
+            </div>
+        </div>
+        <div class="form-group mt-3">
+            <label for="image">Image URL</label>
+            <input id="image" class="form-control" formControlName="image">
+            <div class="alert alert-danger" *ngIf="postForm.get('image')?.invalid && postForm.get('image')?.touched">
+                Valid image URL is required.
+            </div>
+        </div>
+        <div *ngIf="imagePreview" class="form-group mt-3">
+            <label for="image-preview">Image Preview</label>
+            <div class="image-preview mt-2">
+              <img [src]="imagePreview" alt="Image preview" class="rounded d-block">
+            </div>
+          </div>
+        <button type="submit" class="btn btn-primary mt-3" [disabled]="postForm.invalid">Add Post</button>
+    </form>
+  </div>
