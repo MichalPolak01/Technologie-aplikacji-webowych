@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3100:3100"
+    environment:
+      - NODE_ENV=development
+
+  blog:
+    build:
+      context: ./blog
+      dockerfile: Dockerfile
+    volumes:
+      - ./blog:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "4200:4200"
+    environment:
+      - NODE_ENV=development
